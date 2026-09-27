@@ -630,7 +630,9 @@ no prazo informado. Como a nota cai de forma abrupta ao cruzar a data prometida,
 
 Na prática, o dado nunca está pronto. A base parecia limpa, sem nulos nas chaves, mas as verificações de qualidade revelaram avaliações duplicadas por pedido, datas incoerentes e categorias sem tradução. Entendi o motivo de a camada Silver existir.
 O grão da tabela muda o resultado. Assim, se a nota do pedido fosse repetida em cada item, as médias sairiam distorcidas. Com isso o modelo tem duas tabelas fato. Foi o conceito de modelagem que mais fez sentido para mim na prática.
+
 **Detalhes de definição importam.** Comparar a data de entrega com a data prometida, e não os horários, muda o conceito de "atrasado".
+
 **Plataforma:** foi meu primeiro contato com Unity Catalog, Volumes, tabelas Delta e o Catalog Explorer. Ver o catálogo de dados e o diagrama de relacionamentos sendo gerados a partir dos comentários no código deixou claro o valor da governança vista nas aulas.
 
 **Dificuldades.** Além da falta de experiência, tive de aprender tarefas operacionais de desenvolvimento que pareciam simples, mas eram novas para mim: baixar e organizar a base do Kaggle, importar notebooks no Databricks, enviar arquivos para um Volume, tirar as evidências certas e como publicar tudo no GitHub.
