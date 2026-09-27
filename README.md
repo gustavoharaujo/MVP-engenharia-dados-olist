@@ -622,22 +622,17 @@ no prazo informado. Como a nota cai de forma abrupta ao cruzar a data prometida,
 
 # 7. Autoavaliação
 
-**Atingimento dos objetivos.** O objetivo central foi atingido: mesmo com dificuldade de "estudar sozinho" e com auxílio de uma IA, construí um pipeline completo na nuvem (Databricks Free Edition), desde a ingestão dos arquivos brutos até um modelo dimensional documentado. Foram respondidas **cinco das seis perguntas** de forma conclusiva (P1–P5). A hipótese principal, de que o atraso destrói a satisfação, foi confirmada com evidência forte. A **P6 (recompra)** foi respondida apenas parcialmente: medir a taxa de recompra (3,12%) e observar uma tendência coerente com a hipótese, mas a baixa recompra e a ausência de dados externos impediram uma conclusão da causa. Mantive a pergunta no objetivo, como orienta o MVP.
+**Atingimento dos objetivos.** Cheguei a esta sprint sem experiência prática em Engenharia de Dados. Toda a minha experiência em TI está em gestão de projetos, embora tenha estudado programação na faculdade. Termos como Lakehouse, Delta Lake, Unity Catalog e arquitetura medalhão eram, para mim, apenas conceitos discutidos com equipes de trabalho (trabalho com gestão de projetos das equipes de sistemas e dados em minha empresa). Mesmo assim, o objetivo central foi atingido. Construí um pipeline completo na nuvem, no Databricks: 9 arquivos CSV brutos, passando pelas camadas Bronze, Silver e Gold e chegando a um modelo dimensional documentado. Cinco das seis perguntas (P1 a P5) foram respondidas de forma conclusiva, e a hipótese principal, de que o atraso na entrega derruba a satisfação do cliente, foi confirmada com evidência forte. A P6 (recompra) ficou respondida só em parte: medi a taxa de recompra (3,12%) e encontrei, com auxílio de IA, uma tendência coerente com a hipótese, mas a recompra é tão baixa que não permite afirmar causa. Mantive a pergunta, como orienta o enunciado.
 
-**Dificuldades encontradas.**
-- **Escolha do grão do modelo:** a primeira ideia era uma única tabela fato no grão do item, mas vi que a nota e o valor pago se repetiriam em cada item
-  e distorceriam as médias (*fan-out*). A solução foi o esquema constelação com duas fatos.
-- **Definição de "atraso":** a data estimada da fonte não tem horário. Comparar timestamps classificaria como atrasadas as entregas feitas no dia prometido,
-  então passei a comparar **datas**.
-- **Qualidade "escondida":** a base parece limpa à primeira vista (sem nulos nas chaves), mas as verificações revelaram avaliações duplicadas por pedido,
-  datas incoerentes e categorias sem tradução, problemas que teriam distorcido P4 e P2, se permanecessem sem tratamento.
-- **Leitura do CSV de avaliações:** os comentários em texto livre têm quebras de linha e exigiram `multiLine` e `escape` na leitura.
-- **Plataforma:** foi meu primeiro contato com Unity Catalog, Volumes e tabelas Delta. Usei assistentes de IA como apoio na escrita do código e na revisão da documentação,
-  validando os resultados em cada etapa.
+**Como o trabalho foi feito e o papel da IA.** Estudar sozinho um tema novo, com prazo curto (trabalho com nova função e muitos cursos), foi a maior dificuldade. Por isso usei um assistente de IA (Claude) como tutor e parceiro de desenvolvimento durante todo o MVP. Ele me ajudou a interpretar o enunciado e as orientações das aulas, ajudou com o dataset da Olist, na escrita da primeira versão dos notebooks e da documentação e me guiou passo a passo no uso da plataforma. Preparar o ambiente, executar todo o pipeline no Databricks, conferir os resultados de cada etapa e se faziam sentido, gerar as evidências e revisar o relatório foi um trabalho muito satisfatório e que vai me ajudar muito no meu trabalho.
 
-**Trabalhos futuros.**
-- **Orquestração:** encadear os notebooks em um **Databricks Job** com dependências e alertas de falha, e tornar a carga **incremental** (`MERGE`) caso a fonte passe a ser atualizada.
-- **Qualidade automatizada:** transformar as verificações do notebook 04 em *expectations* de **Lakeflow Declarative Pipelines** (antigo DLT), que bloqueiam dados ruins automaticamente.
-- **Geolocalização:** usar `olist_geolocation_dataset` para calcular a **distância vendedor–cliente** e medir seu efeito no prazo, separando distância de ineficiência (caso RJ).
-- **Texto das avaliações:** análise de sentimento dos comentários, em português, para entender *por que* as notas baixas ocorrem além do atraso.
-- **Dashboard** no Databricks SQL (AI/BI) com os indicadores de P1–P5 e um modelo preditivo de risco de atraso por pedido.
+**O que aprendi (e o que mais me surpreendeu).**
+
+Na prática, o dado nunca está pronto. A base parecia limpa, sem nulos nas chaves, mas as verificações de qualidade revelaram avaliações duplicadas por pedido, datas incoerentes e categorias sem tradução. Entendi o motivo de a camada Silver existir.
+O grão da tabela muda o resultado. Assim, se a nota do pedido fosse repetida em cada item, as médias sairiam distorcidas. Com isso o modelo tem duas tabelas fato. Foi o conceito de modelagem que mais fez sentido para mim na prática.
+**Detalhes de definição importam.** Comparar a data de entrega com a data prometida, e não os horários, muda o conceito de "atrasado".
+**Plataforma:** foi meu primeiro contato com Unity Catalog, Volumes, tabelas Delta e o Catalog Explorer. Ver o catálogo de dados e o diagrama de relacionamentos sendo gerados a partir dos comentários no código deixou claro o valor da governança vista nas aulas.
+
+**Dificuldades.** Além da falta de experiência, tive de aprender tarefas operacionais de desenvolvimento que pareciam simples, mas eram novas para mim: baixar e organizar a base do Kaggle, importar notebooks no Databricks, enviar arquivos para um Volume, tirar as evidências certas e como publicar tudo no GitHub.
+
+**Trabalhos futuros.** Meu próximo passo é reescrever sozinho partes do pipeline, especialmente as transformações da Silver, para consolidar o aprendizado sem depender da IA. Tecnicamente, o projeto poderia evoluir com: orquestração dos notebooks em um Databricks Job; carga incremental; verificações de qualidade automatizadas; uso da geolocalização para medir o efeito da distância no prazo; análise de sentimento dos comentários das avaliações; e um dashboard com os indicadores de P1 a P5. A ideia é "brincar" e testar até que tudo seja feito com naturalidade.
